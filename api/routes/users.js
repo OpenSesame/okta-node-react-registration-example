@@ -7,18 +7,22 @@ router.post("/", (req, res, next) => {
   if (!req.body) return res.sendStatus(400);
   const newUser = {
     profile: {
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      email: req.body.email,
-      login: req.body.email,
+      firstName: req.body.user.firstName,
+      lastName: req.body.user.lastName,
+      email: req.body.user.email,
+      login: req.body.user.email,
     },
     credentials: {
       password: {
         value: req.body.password,
       },
     },
-    groupIds: ["00gw12bgysuexhFZf0h7", "00gw12us1toVeKgYN0h7"],
+    groupIds: [],
   };
+  switch(req.body.group) {
+    case 'catalog': newUser.groupIds.push('00gw12us1toVeKgYN0h7'); break;
+    case 'simon': newUser.groupIds.push('00gw12bgysuexhFZf0h7'); break;
+  }
   oktaClient
     .createUser(newUser)
     .then((user) => {
